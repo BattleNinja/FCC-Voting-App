@@ -1,0 +1,70 @@
+
+<h2>Select What You Like</h2>
+{{vote.title}}
+<form method='post' action='/{{vote._id}}'>
+    <input id='_id' type=hidden value={{vote._id}}>
+    {{# each vote.options}}
+    <div class="radio">
+        <label><input type="radio" name="_id" value={{this._id}}>{{this.option}}</label>
+    </div>
+    {{/ each}}
+    <button type ='submit' class = 'btn btn-info'>Submit</button>
+</form>
+
+
+
+<canvas id="myChart" width="250" height="250"></canvas>
+
+
+
+<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.js'></script>
+<script src="https://code.jquery.com/jquery-3.2.1.js"  integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="  crossorigin="anonymous"></script>
+<script>
+
+    var backgroundColorlist= [
+        'rgba(255, 99, 132, 0.2)',
+        'rgba(54, 162, 235, 0.2)',
+        'rgba(255, 206, 86, 0.2)',
+        'rgba(75, 192, 192, 0.2)'
+    ];
+    var borderColorlist= [
+        'rgba(255,99,132,1)',
+        'rgba(54, 162, 235, 1)',
+        'rgba(255, 206, 86, 1)',
+        'rgba(75, 192, 192, 1)'
+    ]
+    var id =document.getElementById('_id').value;
+    var url = "api/"+id
+    var vote = $.get( url, function( data ) {
+      //  alert( data.options );
+        var optionlist=[];
+        var numberlist = [];
+        var bgcolorlist =[];
+        var bcolorlist = [];
+        for (var i = 0;i<data.options.length;i++) {
+          optionlist.push(data.options[i].option);
+          numberlist.push(data.options[i].number);
+          bgcolorlist.push(backgroundColorlist[i]);
+          bcolorlist.push(borderColorlist[i]);
+        }
+
+        var ctx = document.getElementById("myChart").getContext('2d');
+        var myChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels:optionlist ,
+            datasets: [{
+                label: '# of Votes',
+                data: numberlist,
+                backgroundColor: bgcolorlist,
+                borderColor: bcolorlist
+            }]
+        },
+    });
+  });
+
+
+
+
+
+</script>
